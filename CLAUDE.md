@@ -42,7 +42,7 @@
 구글시트(원본) → build\_assets.py → assets.json → index.html(fetch)
 
 - `index.html`은 같은 경로의 `assets.json`을 `fetch`한다.  
-- `file://`(더블클릭)이나 미리보기에선 fetch가 막히므로 **내장 SAMPLE로 폴백**(화면 동일). 실데이터는 http 서빙 필요: `python3 -m http.server 8080`.  
+- ES 모듈이라 `file://`(더블클릭)·미리보기로는 앱이 아예 뜨지 않는다. **루트에서 http 서빙 후 `/public/`** 로 접속: `python3 -m http.server 8000` → `localhost:8000/public/`. `assets.json` fetch 실패 시 **내장 SAMPLE로 폴백**(화면 동일).  
 - 갱신 워크플로: 시트 수정 → 각 탭 CSV 다운로드 → `sheets/`에 덮어쓰기 → `python3 build_assets.py` → 배포.
 
 ### 데이터 계약 (`assets.json`) — 함부로 바꾸지 말 것
@@ -102,7 +102,7 @@ Asset 필드: `id`(int, PK), `feature_key`(CONSTANT\_CASE, unique), `name_ko`, `
 
 ## 8\. 코드 스타일
 
-- 단일 `index.html` 유지가 기본. 파일 분리는 **사용자가 명시 요청할 때만**(바닐라 유지: `/src/*.css`, `/src/*.js` ES 모듈, 번들러 없이 `<script type="module">`).  
+- 구조는 마크업 `public/` + 스타일·로직 `src/`(바닐라 ES 모듈, 번들러 없이 `<script type="module">`)로 분리돼 있다. **구조를 더 쪼개거나 합치는 변경은 사용자 명시 요청 시에만.**  
 - 함수·변수명은 기존 코드 컨벤션을 따른다(읽고 맞춘다).  
 - 접근성/반응형 유지: 모바일(≤680px) 레이아웃, `prefers-reduced-motion`, 키보드 포커스.  
 - localStorage/sessionStorage 사용 금지(아티팩트 호환 이력) — 상태는 메모리/JSON으로.
