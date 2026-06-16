@@ -1,0 +1,13 @@
+# dependencies (이 프로젝트는 런타임 의존성이 없습니다 — 정적 서버 스크립트용)
+node_modules/
+
+# python
+__pycache__/
+*.pyc
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
+
+# 참고: public/assets.json 은 build_assets.py 산출물이지만 정적 배포 대상이라 커밋합니다.

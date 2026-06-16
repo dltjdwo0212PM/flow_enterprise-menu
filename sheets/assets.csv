@@ -1,0 +1,13 @@
+id,feature_key,name_ko,name_en,category,tier,platforms,effort_mm,rev_est,source,is_new,pm,tags,description,constraints,demo_url,wiki_url
+1,CHAT_UNIFIED_SEARCH,채팅 통합 검색,Unified Chat Search,메신저,std,웹|iOS|AOS,1.0,9500,auto,N,김기획,검색|메신저|생산성,여러 채팅방·파일·멤버를 한 번에 검색하고 결과를 탭으로 분류. 기간·작성자 필터 포함.,,,
+2,SCHEDULED_MESSAGE,예약 메시지,Scheduled Message,메신저,resell,웹|iOS|AOS,0.8,3200,auto,N,이책임,예약발송|자동화|메신저,"지정한 시각에 자동 발송되는 예약 메시지. 발송 전 수정·취소 가능, 반복 발송 옵션 지원.",,,
+3,AIRGAP_FILE_TRANSFER,망연계 파일 반입/반출,Air-gap File Transfer,보안/인증,excl,웹,4.5,6800,manual,N,박PM,보안|망분리|공공,망분리 환경에서 내부망-외부망 간 파일을 승인 절차를 거쳐 안전하게 전송. 감사 로그 적재.,망분리(인터넷망/업무망 분리) 인프라 환경에서만 동작. 별도 연계 서버 구축 필요.,,
+4,BIOMETRIC_SKIP_REAUTH,생체인증 재인증 스킵,Skip Biometric Re-auth,보안/인증,resell,iOS|AOS,1.2,2800,auto,Y,김기획,인증|보안|UX,생체인증 후 일정 시간/조건 동안 재인증을 생략하는 다시 묻지 않기 옵션. 보안 정책 연동.,디바이스 보안 정책에 따라 강제 재인증되는 케이스 존재. 정책 합의 필요.,,
+5,DASHBOARD_WIDGET_API,대시보드 위젯 API,Dashboard Widget API,대시보드/리포트,std,웹,2.0,6000,auto,N,이책임,대시보드|API|확장,외부 데이터를 위젯 형태로 대시보드에 노출하는 오픈 API. 차트·테이블·카운터 타입 제공.,,,
+6,REPORT_AUTO_AGGREGATE,업무보고 자동 집계,Auto Report Aggregation,대시보드/리포트,resell,웹|태블릿,3.2,5200,auto,Y,박PM,리포트|자동화|공공,팀·기간별 업무 진척을 자동 집계해 보고서로 생성. 태블릿 보고 화면 최적화 포함.,,,
+7,EXTERNAL_CHATBOT,외부 챗봇 연동,External Chatbot Link,연동/API,resell,웹,1.5,2000,auto,Y,김기획,AI|연동|챗봇,외부 LLM 챗봇을 채팅방에 연동해 질의응답·요약 수행. 응답 출처 표기 옵션 지원.,외부 API 비용 및 데이터 반출 정책 검토 필요. 고객사 보안 심사 대상.,,
+8,BATCH_USER_SYNC,배치 사용자 동기화,Batch User Sync,연동/API,std,웹,1.8,4500,auto,N,이책임,연동|인사시스템|자동화,인사 시스템과 사용자·조직 정보를 야간 배치로 동기화. 입퇴사·부서이동 자동 반영.,,,
+9,MUTED_ROOM,음소거 채팅방,Muted Room,메신저,resell,웹|iOS|AOS,0.5,1500,auto,N,박PM,알림|메신저|UX,특정 채팅방의 알림만 끄는 음소거 기능. 멘션 시 예외 알림 옵션 제공.,,,
+10,APPROVAL_CUSTOM_RULE,결재선 커스텀 룰,Custom Approval Line,권한/관리,excl,웹,2.5,3500,manual,N,이책임,결재|워크플로|금융,금액·부서·직급 조건에 따라 결재선이 자동 분기되는 룰 엔진. 위임결재 포함.,고객사 내부 결재 규정에 강하게 결합. 타사 적용 시 룰 재설계 필요.,,
+11,CALENDAR_RANGE_FILTER,캘린더 기간 검색 필터,Calendar Range Filter,캘린더,resell,웹|iOS|AOS,0.6,800,auto,Y,김기획,캘린더|검색|일정,캘린더 일정을 기간·참석자·태그로 검색하는 필터. 검색 기준일 설정 옵션 검토중.,,,
+12,SSO_SAML,SSO(SAML) 연동,SSO / SAML,보안/인증,std,웹|iOS|AOS,1.0,8000,auto,N,박PM,인증|SSO|보안,"SAML 2.0 기반 싱글사인온. 다수 IdP 연동 검증 완료, 가장 많이 재사용된 표준 기능.",,,

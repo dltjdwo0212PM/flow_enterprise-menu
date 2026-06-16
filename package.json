@@ -1,0 +1,11 @@
+{
+  "name": "flow-enterprise-menu",
+  "version": "1.0.0",
+  "private": true,
+  "description": "사내 개발자산 메뉴판 — 바닐라 JS/CSS 정적 웹앱 (Google Sheet → assets.json → fetch)",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "serve": "python3 -m http.server 8000",
+    "build:data": "python3 build_assets.py"
+  }
+}

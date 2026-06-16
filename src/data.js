@@ -1,0 +1,550 @@
+import { setData, state } from './core.js';
+
+// SAMPLE: fetch 실패(오프라인/파일 없음) 시 폴백. public/assets.json 과 동일 내용.
+export const SAMPLE = {
+  "generated_at": "2026-06-12 07:48",
+  "assets": [
+    {
+      "id": 1,
+      "feature_key": "CHAT_UNIFIED_SEARCH",
+      "name_ko": "채팅 통합 검색",
+      "name_en": "Unified Chat Search",
+      "category": "메신저",
+      "tier": "std",
+      "platforms": [
+        "웹",
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 1.0,
+      "rev_est": 9500,
+      "source": "auto",
+      "is_new": false,
+      "pm": "김기획",
+      "tags": [
+        "검색",
+        "메신저",
+        "생산성"
+      ],
+      "description": "여러 채팅방·파일·멤버를 한 번에 검색하고 결과를 탭으로 분류. 기간·작성자 필터 포함.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "새솔증권",
+          "client_anon": "S증권",
+          "applied_at": "2024-11",
+          "contract_ref": "C-2024-118"
+        },
+        {
+          "client_name": "맥스전자",
+          "client_anon": "M전자",
+          "applied_at": "2025-03",
+          "contract_ref": "C-2025-042"
+        },
+        {
+          "client_name": "한빛생명",
+          "client_anon": "A생명",
+          "applied_at": "2025-07",
+          "contract_ref": "C-2025-090"
+        },
+        {
+          "client_name": "그린복지공단",
+          "client_anon": "G공단",
+          "applied_at": "2026-01",
+          "contract_ref": "C-2026-006"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "feature_key": "SCHEDULED_MESSAGE",
+      "name_ko": "예약 메시지",
+      "name_en": "Scheduled Message",
+      "category": "메신저",
+      "tier": "resell",
+      "platforms": [
+        "웹",
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 0.8,
+      "rev_est": 3200,
+      "source": "auto",
+      "is_new": false,
+      "pm": "이책임",
+      "tags": [
+        "예약발송",
+        "자동화",
+        "메신저"
+      ],
+      "description": "지정한 시각에 자동 발송되는 예약 메시지. 발송 전 수정·취소 가능, 반복 발송 옵션 지원.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "미래제일금융지주",
+          "client_anon": "H금융지주",
+          "applied_at": "2025-02",
+          "contract_ref": "C-2025-021"
+        },
+        {
+          "client_name": "동연중공업",
+          "client_anon": "D제조",
+          "applied_at": "2025-06",
+          "contract_ref": "C-2025-077"
+        },
+        {
+          "client_name": "블루페이카드",
+          "client_anon": "B카드",
+          "applied_at": "2025-11",
+          "contract_ref": "C-2025-140"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "feature_key": "AIRGAP_FILE_TRANSFER",
+      "name_ko": "망연계 파일 반입/반출",
+      "name_en": "Air-gap File Transfer",
+      "category": "보안/인증",
+      "tier": "excl",
+      "platforms": [
+        "웹"
+      ],
+      "effort_mm": 4.5,
+      "rev_est": 6800,
+      "source": "manual",
+      "is_new": false,
+      "pm": "박PM",
+      "tags": [
+        "보안",
+        "망분리",
+        "공공"
+      ],
+      "description": "망분리 환경에서 내부망-외부망 간 파일을 승인 절차를 거쳐 안전하게 전송. 감사 로그 적재.",
+      "constraints": "망분리(인터넷망/업무망 분리) 인프라 환경에서만 동작. 별도 연계 서버 구축 필요.",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "새솔증권",
+          "client_anon": "S증권",
+          "applied_at": "2025-03",
+          "contract_ref": "C-2025-039"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "feature_key": "BIOMETRIC_SKIP_REAUTH",
+      "name_ko": "생체인증 재인증 스킵",
+      "name_en": "Skip Biometric Re-auth",
+      "category": "보안/인증",
+      "tier": "resell",
+      "platforms": [
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 1.2,
+      "rev_est": 2800,
+      "source": "auto",
+      "is_new": true,
+      "pm": "김기획",
+      "tags": [
+        "인증",
+        "보안",
+        "UX"
+      ],
+      "description": "생체인증 후 일정 시간/조건 동안 재인증을 생략하는 다시 묻지 않기 옵션. 보안 정책 연동.",
+      "constraints": "디바이스 보안 정책에 따라 강제 재인증되는 케이스 존재. 정책 합의 필요.",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "블루페이카드",
+          "client_anon": "B카드",
+          "applied_at": "2025-12",
+          "contract_ref": "C-2025-150"
+        },
+        {
+          "client_name": "미래제일금융지주",
+          "client_anon": "H금융지주",
+          "applied_at": "2026-02",
+          "contract_ref": "C-2026-018"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "feature_key": "DASHBOARD_WIDGET_API",
+      "name_ko": "대시보드 위젯 API",
+      "name_en": "Dashboard Widget API",
+      "category": "대시보드/리포트",
+      "tier": "std",
+      "platforms": [
+        "웹"
+      ],
+      "effort_mm": 2.0,
+      "rev_est": 6000,
+      "source": "auto",
+      "is_new": false,
+      "pm": "이책임",
+      "tags": [
+        "대시보드",
+        "API",
+        "확장"
+      ],
+      "description": "외부 데이터를 위젯 형태로 대시보드에 노출하는 오픈 API. 차트·테이블·카운터 타입 제공.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "대한정보통신공사",
+          "client_anon": "K공사",
+          "applied_at": "2025-01",
+          "contract_ref": "C-2025-008"
+        },
+        {
+          "client_name": "그린복지공단",
+          "client_anon": "G공단",
+          "applied_at": "2025-05",
+          "contract_ref": "C-2025-066"
+        },
+        {
+          "client_name": "맥스전자",
+          "client_anon": "M전자",
+          "applied_at": "2025-09",
+          "contract_ref": "C-2025-112"
+        },
+        {
+          "client_name": "한빛생명",
+          "client_anon": "A생명",
+          "applied_at": "2026-01",
+          "contract_ref": "C-2026-004"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "feature_key": "REPORT_AUTO_AGGREGATE",
+      "name_ko": "업무보고 자동 집계",
+      "name_en": "Auto Report Aggregation",
+      "category": "대시보드/리포트",
+      "tier": "resell",
+      "platforms": [
+        "웹",
+        "태블릿"
+      ],
+      "effort_mm": 3.2,
+      "rev_est": 5200,
+      "source": "auto",
+      "is_new": true,
+      "pm": "박PM",
+      "tags": [
+        "리포트",
+        "자동화",
+        "공공"
+      ],
+      "description": "팀·기간별 업무 진척을 자동 집계해 보고서로 생성. 태블릿 보고 화면 최적화 포함.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "그린복지공단",
+          "client_anon": "G공단",
+          "applied_at": "2025-08",
+          "contract_ref": "C-2025-101"
+        },
+        {
+          "client_name": "대한정보통신공사",
+          "client_anon": "K공사",
+          "applied_at": "2026-02",
+          "contract_ref": "C-2026-020"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "feature_key": "EXTERNAL_CHATBOT",
+      "name_ko": "외부 챗봇 연동",
+      "name_en": "External Chatbot Link",
+      "category": "연동/API",
+      "tier": "resell",
+      "platforms": [
+        "웹"
+      ],
+      "effort_mm": 1.5,
+      "rev_est": 2000,
+      "source": "auto",
+      "is_new": true,
+      "pm": "김기획",
+      "tags": [
+        "AI",
+        "연동",
+        "챗봇"
+      ],
+      "description": "외부 LLM 챗봇을 채팅방에 연동해 질의응답·요약 수행. 응답 출처 표기 옵션 지원.",
+      "constraints": "외부 API 비용 및 데이터 반출 정책 검토 필요. 고객사 보안 심사 대상.",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "블루페이카드",
+          "client_anon": "B카드",
+          "applied_at": "2025-12",
+          "contract_ref": "C-2025-149"
+        },
+        {
+          "client_name": "동연중공업",
+          "client_anon": "D제조",
+          "applied_at": "2026-03",
+          "contract_ref": "C-2026-031"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "feature_key": "BATCH_USER_SYNC",
+      "name_ko": "배치 사용자 동기화",
+      "name_en": "Batch User Sync",
+      "category": "연동/API",
+      "tier": "std",
+      "platforms": [
+        "웹"
+      ],
+      "effort_mm": 1.8,
+      "rev_est": 4500,
+      "source": "auto",
+      "is_new": false,
+      "pm": "이책임",
+      "tags": [
+        "연동",
+        "인사시스템",
+        "자동화"
+      ],
+      "description": "인사 시스템과 사용자·조직 정보를 야간 배치로 동기화. 입퇴사·부서이동 자동 반영.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "한빛생명",
+          "client_anon": "A생명",
+          "applied_at": "2025-01",
+          "contract_ref": "C-2025-005"
+        },
+        {
+          "client_name": "맥스전자",
+          "client_anon": "M전자",
+          "applied_at": "2025-07",
+          "contract_ref": "C-2025-088"
+        },
+        {
+          "client_name": "새솔증권",
+          "client_anon": "S증권",
+          "applied_at": "2025-12",
+          "contract_ref": "C-2025-145"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "feature_key": "MUTED_ROOM",
+      "name_ko": "음소거 채팅방",
+      "name_en": "Muted Room",
+      "category": "메신저",
+      "tier": "resell",
+      "platforms": [
+        "웹",
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 0.5,
+      "rev_est": 1500,
+      "source": "auto",
+      "is_new": false,
+      "pm": "박PM",
+      "tags": [
+        "알림",
+        "메신저",
+        "UX"
+      ],
+      "description": "특정 채팅방의 알림만 끄는 음소거 기능. 멘션 시 예외 알림 옵션 제공.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "동연중공업",
+          "client_anon": "D제조",
+          "applied_at": "2025-04",
+          "contract_ref": "C-2025-051"
+        },
+        {
+          "client_name": "미래제일금융지주",
+          "client_anon": "H금융지주",
+          "applied_at": "2025-08",
+          "contract_ref": "C-2025-099"
+        },
+        {
+          "client_name": "블루페이카드",
+          "client_anon": "B카드",
+          "applied_at": "2026-01",
+          "contract_ref": "C-2026-009"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "feature_key": "APPROVAL_CUSTOM_RULE",
+      "name_ko": "결재선 커스텀 룰",
+      "name_en": "Custom Approval Line",
+      "category": "권한/관리",
+      "tier": "excl",
+      "platforms": [
+        "웹"
+      ],
+      "effort_mm": 2.5,
+      "rev_est": 3500,
+      "source": "manual",
+      "is_new": false,
+      "pm": "이책임",
+      "tags": [
+        "결재",
+        "워크플로",
+        "금융"
+      ],
+      "description": "금액·부서·직급 조건에 따라 결재선이 자동 분기되는 룰 엔진. 위임결재 포함.",
+      "constraints": "고객사 내부 결재 규정에 강하게 결합. 타사 적용 시 룰 재설계 필요.",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "미래제일금융지주",
+          "client_anon": "H금융지주",
+          "applied_at": "2025-02",
+          "contract_ref": "C-2025-024"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "feature_key": "CALENDAR_RANGE_FILTER",
+      "name_ko": "캘린더 기간 검색 필터",
+      "name_en": "Calendar Range Filter",
+      "category": "캘린더",
+      "tier": "resell",
+      "platforms": [
+        "웹",
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 0.6,
+      "rev_est": 800,
+      "source": "auto",
+      "is_new": true,
+      "pm": "김기획",
+      "tags": [
+        "캘린더",
+        "검색",
+        "일정"
+      ],
+      "description": "캘린더 일정을 기간·참석자·태그로 검색하는 필터. 검색 기준일 설정 옵션 검토중.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "그린복지공단",
+          "client_anon": "G공단",
+          "applied_at": "2026-02",
+          "contract_ref": "C-2026-022"
+        },
+        {
+          "client_name": "한빛생명",
+          "client_anon": "A생명",
+          "applied_at": "2026-03",
+          "contract_ref": "C-2026-030"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "feature_key": "SSO_SAML",
+      "name_ko": "SSO(SAML) 연동",
+      "name_en": "SSO / SAML",
+      "category": "보안/인증",
+      "tier": "std",
+      "platforms": [
+        "웹",
+        "iOS",
+        "AOS"
+      ],
+      "effort_mm": 1.0,
+      "rev_est": 8000,
+      "source": "auto",
+      "is_new": false,
+      "pm": "박PM",
+      "tags": [
+        "인증",
+        "SSO",
+        "보안"
+      ],
+      "description": "SAML 2.0 기반 싱글사인온. 다수 IdP 연동 검증 완료, 가장 많이 재사용된 표준 기능.",
+      "constraints": "",
+      "demo_url": "",
+      "wiki_url": "",
+      "applications": [
+        {
+          "client_name": "맥스전자",
+          "client_anon": "M전자",
+          "applied_at": "2024-10",
+          "contract_ref": "C-2024-101"
+        },
+        {
+          "client_name": "새솔증권",
+          "client_anon": "S증권",
+          "applied_at": "2025-02",
+          "contract_ref": "C-2025-030"
+        },
+        {
+          "client_name": "미래제일금융지주",
+          "client_anon": "H금융지주",
+          "applied_at": "2025-06",
+          "contract_ref": "C-2025-080"
+        },
+        {
+          "client_name": "대한정보통신공사",
+          "client_anon": "K공사",
+          "applied_at": "2025-10",
+          "contract_ref": "C-2025-120"
+        },
+        {
+          "client_name": "블루페이카드",
+          "client_anon": "B카드",
+          "applied_at": "2026-02",
+          "contract_ref": "C-2026-016"
+        }
+      ]
+    }
+  ]
+};
+
+// assets.json 스키마 -> 앱 내부 평면형으로 정규화. 재사용 횟수는 applications.length.
+export function normalize(list){return (list||[]).map(a=>{const apps=a.applications||[];const real=(apps[0]&&apps[0].client_name)||a.client_name||'미지정';return {id:a.id,name:a.name_ko,en:a.name_en||'',key:a.feature_key||'',cat:a.category||'미분류',tier:a.tier||'resell',platform:a.platforms||[],desc:a.description||'',cons:a.constraints||'',demoUrl:a.demo_url||'',wikiUrl:a.wiki_url||'',pm:a.pm||'',tags:a.tags||[],neww:!!a.is_new,rev:a.rev_est||0,mm:a.effort_mm||0,source:a.source||'manual',applications:apps,real:real,anon:(apps[0]&&apps[0].client_anon)||(real.charAt(0)+'***'),reuse:apps.length};});}
+
+// 데이터 적재 후 재렌더 훅 — 순환 의존을 피하려 app.js 가 renderAll 을 등록한다.
+let rerender = () => {};
+export function onData(fn){ rerender = fn; }
+
+export async function loadData(){
+  try{ const r=await fetch('assets.json',{cache:'no-store'}); if(!r.ok)throw 0; const j=await r.json(); setData(normalize(j.assets)); }
+  catch(e){ setData(normalize(SAMPLE.assets)); }
+  state.dataReady=true;
+  if(state.entered) rerender();
+}
