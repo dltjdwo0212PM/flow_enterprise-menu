@@ -16,10 +16,11 @@
 
 ## 1\. 절대 하지 말 것 (NON-NEGOTIABLE)
 
-- ❌ **프레임워크·번들러·빌드도구 도입.** React/Vue/Vite/webpack 등 금지. **바닐라 HTML/CSS/JS만.** (개발자 1명, 단순함이 최우선 가치)  
+- ❌ **프론트엔드에 프레임워크·번들러·빌드도구 도입.** React/Vue/Vite/webpack 등 금지. 프론트(`/public`,`/src`)는 **바닐라 HTML/CSS/JS만.** (개발자 1명, 단순함이 최우선 가치)  
+  - ✅ 예외: **백엔드(`/server`)는 Node + Fastify + TypeScript + Prisma 허용.** 이 스택 밖의 추가는 먼저 묻는다. 프론트는 그대로 바닐라.  
 - ❌ **Noto Sans KR 외 폰트 추가.** 숫자에도 다른 폰트 섞지 않는다. (과거 JetBrains Mono 혼용을 제거한 이력 있음)  
 - ❌ **색을 함부로 늘리기.** 액센트는 보라(내부)/teal(고객) 단일 체계 \+ 무채색. (한때 6색이던 걸 정리함)  
-- ❌ **외부 API 키를 코드에 하드코딩.** 제안 AI는 claude.ai 런타임 가정 \+ 실패 시 폴백 유지.  
+- ❌ **비밀값을 코드/프론트에 하드코딩.** DB connection string·DB 비밀번호·세션 시크릿·외부 API 키 → **`.env` + 환경변수로만** 주입하고 **`.env`는 `.gitignore`**. 제안 AI 키도 코드에 안 넣음(실패 시 폴백 유지).  
 - ❌ **시키지 않은 변경.** 디자인·문구·다른 기능을 임의로 바꾸지 않는다. "바꾸라고 한 것만 바꾼다."  
 - ❌ **임의 기능 추가.** 제안은 제안으로만 남긴다. 좋아 보여도 먼저 묻는다.  
 - ❌ **V2 범위를 미리 구현**(아래 7번 참조).
@@ -31,7 +32,7 @@
 - **Asset Vault**: 마드라스체크(협업툴 Flow/Morningmate) **사내 개발자산 메뉴판**.  
 - **목적/wedge**: \*\*영업·개발(실무)\*\*가 우리가 만든 엔터프라이즈 커스텀 기능을 검색·참조하고, 제안 초안을 만들고, 데모·위키로 넘어가게 한다.  
 - **C레벨 가치 대시보드는 우선순위 아님** — 사내 발표용 "엣지 포인트". 여기에 과투자하지 말 것. 리소스는 실무 화면에.  
-- **단계**: 지금은 **V1 \= 구글시트 원본 → JSON → 정적 웹앱.** DB·인증·자동입력은 V2.  
+- **단계**: **V1 = 프론트(바닐라) + TypeScript API 서버 + PostgreSQL + 사내 로그인.** 개발중 자동입력·MCP 선제알림·알림봇은 V2. (구글시트→JSON 경로는 DB 초기 시드용으로 격하)  
 - **스폰서/오너**: 대표·부대표 승인, 오너는 솔로 1인. → 단순·유지보수성이 기능 화려함보다 중요.  
 - **장기 방향**: 추후 범용 "개발자산 관리 솔루션"으로 확장(지금은 메뉴판 범위).
 
@@ -39,20 +40,20 @@
 
 ## 3\. 아키텍처 / 데이터 흐름
 
-구글시트(원본) → build\_assets.py → assets.json → index.html(fetch)
+PostgreSQL ← Prisma → TypeScript API(`/server`) ← `fetch` ─ 프론트(`/public`, `/src`)
 
-- `index.html`은 같은 경로의 `assets.json`을 `fetch`한다.  
+- 운영 데이터의 **원본은 이제 DB(PostgreSQL)**. 프론트(`/public`,`/src`)는 API(`GET /api/assets` 등)를 `fetch`해서 렌더한다.  
 - ES 모듈이라 `file://`(더블클릭)·미리보기로는 앱이 아예 뜨지 않는다. **루트에서 http 서빙 후 `/public/`** 로 접속: `python3 -m http.server 8000` → `localhost:8000/public/`. `assets.json` fetch 실패 시 **내장 SAMPLE로 폴백**(화면 동일).  
-- 갱신 워크플로: 시트 수정 → 각 탭 CSV 다운로드 → `sheets/`에 덮어쓰기 → `python3 build_assets.py` → 배포.
+- 구글시트 → `build_assets.py` → `assets.json` 경로는 **초기 시드/마이그레이션 용도로 격하**(더는 운영 원본 아님). 시드 갱신: 시트 CSV 다운로드 → `sheets/` 덮어쓰기 → `python3 build_assets.py`.
 
-### 데이터 계약 (`assets.json`) — 함부로 바꾸지 말 것
+### 데이터 계약 (스키마) — 함부로 바꾸지 말 것  (`assets.json` = API 응답과 동일 형태)
 
 { "generated\_at": "YYYY-MM-DD HH:MM", "assets": \[ Asset, ... \] }
 
 Asset 필드: `id`(int, PK), `feature_key`(CONSTANT\_CASE, unique), `name_ko`, `name_en`, `category`, `tier`(std|resell|excl), `platforms`\[\], `effort_mm`(number), `rev_est`(만원, 추정·참고), `source`(auto|manual), `is_new`(bool), `pm`, `tags`\[\], `description`, `constraints`, `demo_url`, `wiki_url`, `applications`\[\]. applications 항목: `{client_name, client_anon, applied_at, contract_ref}`.
 
 - ★ **재사용 횟수는 데이터에 숫자로 두지 않는다.** `applications` 배열 길이로 계산한다(단일 진실원).  
-- 앱은 로드 시 `normalize()`로 위 스키마 → 내부 표현으로 매핑한다. 스키마를 바꾸면 `normalize`와 `build_assets.py`를 함께 바꾼다.
+- **이제 API 응답 `GET /api/assets` 가 위와 같은 형태**를 반환한다. 프론트는 로드 시 `normalize()`로 매핑(그대로 재사용). 스키마를 바꾸면 `normalize` · `build_assets.py`(시드) · **API 응답 직렬화(서버)** 를 함께 바꾼다.
 
 ---
 
@@ -86,23 +87,28 @@ Asset 필드: `id`(int, PK), `feature_key`(CONSTANT\_CASE, unique), `name_ko`, `
 
 ## 7\. V1 범위 vs V2 (오버빌드 금지)
 
-**V1 (지금 다듬는 범위)**: 진입 게이트 · 자산 카탈로그(검색·필터·그룹토글) · 상세 모달(기능키 복사·데모·위키·Q\&A) · 제안 빌더(담기→공수합계+제약+AI 3안/템플릿 폴백) · 가치 대시보드(엣지용) · 관리(CRUD) · Sheet→JSON.
+**V1 (지금 다듬는 범위)** — 프론트 + 서버:
+
+- **프론트(바닐라)**: 진입 게이트 · 자산 카탈로그(검색·필터·그룹토글) · 상세 모달(기능키 복사·데모·위키·Q&A) · 제안 빌더(담기→공수합계+제약+AI 3안/템플릿 폴백) · 가치 대시보드(엣지용) · 관리 화면.
+- **백엔드(`/server`)**: PostgreSQL + TypeScript API · 서버 측 CRUD · 사내 로그인 인증.
+- **데이터**: 구글시트→`build_assets.py`→`assets.json` 은 **DB 초기 시드/마이그레이션** 용도.
 
 **V2 (지금 만들지 마. 요청받아도 먼저 "V2인데 진행할까?" 확인)**:
 
-- 진짜 DB·백엔드, 사내 SSO 인증  
-- 개발 중 자동 입력, MCP 기반 "이 기능 추가할까요?" 선제 알림  
-- 신규등록 알림봇(Flow 알림봇)  
-- 고객에게 직접 URL 노출(권한 분리 hardening 후)  
-- Q\&A·제안 영속화
+- 개발 중 자동 입력
+- MCP 기반 "이 기능 추가할까요?" 선제 알림
+- 신규등록 알림봇(Flow 알림봇)
 
 근시일 작업 후보(참고): 위키 20개 URL 연결 / 제안 AI 사내 LLM 경로 연결 / 관리 입력을 applications 기반으로 변경.
+
+미배치(요청 시 합의): 고객 직접 URL 노출은 §10 인증·권한 hardening 통과 후 검토 / Q&A·제안 영속화는 V1 DB 위에서 가능하나 우선순위 별도 합의.
 
 ---
 
 ## 8\. 코드 스타일
 
-- 구조는 마크업 `public/` + 스타일·로직 `src/`(바닐라 ES 모듈, 번들러 없이 `<script type="module">`)로 분리돼 있다. **구조를 더 쪼개거나 합치는 변경은 사용자 명시 요청 시에만.**  
+- **프론트** 구조는 마크업 `public/` + 스타일·로직 `src/`(바닐라 ES 모듈, 번들러 없이 `<script type="module">`)로 분리돼 있다. **구조를 더 쪼개거나 합치는 변경은 사용자 명시 요청 시에만.**  
+- **백엔드(`/server`)**: 레이어 분리(`routes` / `service` / `db`) · 입출력은 **zod**로 검증 · 에러는 표준 형태(JSON `{ error: { code, message } }`)로 응답 · 비밀값은 **env**로만. (프론트는 아래 바닐라 규칙 그대로.)  
 - 함수·변수명은 기존 코드 컨벤션을 따른다(읽고 맞춘다).  
 - 접근성/반응형 유지: 모바일(≤680px) 레이아웃, `prefers-reduced-motion`, 키보드 포커스.  
 - localStorage/sessionStorage 사용 금지(아티팩트 호환 이력) — 상태는 메모리/JSON으로.
@@ -115,4 +121,13 @@ Asset 필드: `id`(int, PK), `feature_key`(CONSTANT\_CASE, unique), `name_ko`, `
 - **옹호 금지 — 비평이 역할.** 더 나은 방법/위험/반례를 먼저 말한다.  
 - 근거가 약하면 **`[검증됨]` / `[추정]` / `[근거 부족]`** 로 구분해서 솔직하게.  
 - 불확실하면 추측으로 단정하지 말고 재확인 요청.
+
+---
+
+## 10\. 보안 (서버)
+
+- **DB 자격증명·세션 시크릿은 env.** 레포에 커밋 금지(`.env`는 `.gitignore`).
+- **모든 쓰기(write) API는 인증·권한 통과 후에만** 실행한다.
+- **고객 모드는 매출·공수·등급·실명 필드를 애초에 서버 응답에서 제외**한다(프론트로만 가리지 않는다 — §4 보강).
+- **SQL은 Prisma 파라미터 바인딩만.** raw 쿼리 지양(불가피하면 파라미터 바인딩 필수).
 
